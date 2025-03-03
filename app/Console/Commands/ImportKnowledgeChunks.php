@@ -4,8 +4,7 @@ namespace App\Console\Commands;
 
 use App\Enums\Topic;
 use App\Models\KnowledgeChunk;
-use EchoLabs\Prism\Enums\Provider;
-use EchoLabs\Prism\Prism;
+use App\Services\EmbeddingService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Yaml\Yaml;
@@ -60,15 +59,10 @@ class ImportKnowledgeChunks extends Command
                 continue;
             }
 
-            try {
-                $response = Prism::embeddings()
-                    ->using(Provider::OpenAI, 'text-embedding-3-small')
-                    ->fromInput($markdown)
-                    ->generate();
+            $embedding = EmbeddingService::createEmbedding($markdown);
 
-                $embedding = $response->embeddings;
-            } catch (\Exception $e) {
-                $this->error('Failed to generate embedding for file: ' . basename($file) . '. Error: ' . $e->getMessage());
+            if ($embedding == null) {
+                $this->error('Could not generate an embedding for file: ' . basename($file));
                 continue;
             }
 
