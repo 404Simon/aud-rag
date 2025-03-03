@@ -10,7 +10,6 @@ use EchoLabs\Prism\Schema\ObjectSchema;
 use EchoLabs\Prism\Prism;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Log;
 
 class RAGPipelineJob implements ShouldQueue
 {
@@ -51,7 +50,7 @@ class RAGPipelineJob implements ShouldQueue
     public function handle(): void
     {
         $response = Prism::structured()
-            ->using(Provider::OpenAI, 'gpt-4o')
+            ->using(Provider::OpenAI, 'gpt-4o-mini')
             ->withSchema($this->relevantTopicsSchema())
             ->withPrompt('Du bist Informatikexperte. Analysiere die gegebene Frage und bestimme alle relevanten Teilgebiete der Informatik.\nFrage: ' . $this->userQuery)
             ->generate();
