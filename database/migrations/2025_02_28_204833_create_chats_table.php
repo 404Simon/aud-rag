@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ChatMessageType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,6 +17,13 @@ return new class extends Migration {
             $table->string('title')->default('');
             $table->timestamps();
         });
+
+        Schema::create('chat_messages', function (Blueprint $table) {
+            $table->id();
+            $table->foreignUuid('chat_id')->cascadeOnDelete();
+            $table->enum('type', array_column(ChatMessageType::cases(), 'value'));
+            $table->timestamps();
+        });
     }
 
     /**
@@ -24,5 +32,6 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('chats');
+        Schema::dropIfExists('chat_messages');
     }
 };
