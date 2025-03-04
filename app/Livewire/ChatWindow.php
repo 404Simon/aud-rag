@@ -20,6 +20,10 @@ class ChatWindow extends Component
     {
         $this->validate();
 
+        if ($this->isGenerating()) {
+            return;
+        }
+
         $message = $this->chat->messages()->create([
             'chat_id' => $this->chat->id,
             'type' => ChatMessageType::USER_QUERY,
@@ -31,8 +35,13 @@ class ChatWindow extends Component
         $this->messageText = '';
     }
 
+    public function isGenerating()
+    {
+        return $this->chat->messages->last()->type !== ChatMessageType::RELEVANT_TOPICS;
+    }
+
     public function render()
     {
-        return view('livewire.chat-window');
+        return view('livewire.chat-window', ['isGenerating' => $this->isGenerating()]);
     }
 }
