@@ -37,7 +37,10 @@ class ChatWindow extends Component
 
     public function isGenerating()
     {
-        return $this->chat->messages->last()->type !== ChatMessageType::RELEVANT_TOPICS;
+        if ($this->chat->messages->isNotEmpty()) {
+            return $this->chat->messages->last()->type !== ChatMessageType::VECTOR_SEARCH;
+        }
+        return false;
     }
 
     public function render()
