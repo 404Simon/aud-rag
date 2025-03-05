@@ -12,6 +12,9 @@
             @if ($message->type === ChatMessageType::RELEVANT_TOPICS)
                 <x-relevant-topics-component :relevantTopics="$message->relevantTopics" />
             @endif
+            @if ($message->type === ChatMessageType::VECTOR_SEARCH)
+                <x-vector-search-component :message="$message" />
+            @endif
         @empty
             <div class="text-gray-500 dark:text-gray-400">
                 No messages yet. Start the conversation!

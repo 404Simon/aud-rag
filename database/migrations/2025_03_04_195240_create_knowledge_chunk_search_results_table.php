@@ -13,7 +13,9 @@ return new class extends Migration {
         Schema::create('knowledge_chunk_search_results', function (Blueprint $table) {
             $table->id();
             $table->foreignId('chat_message_id')->cascadeOnDelete();
-            $table->foreignUuid('knowledge_chunk_id')->cascadeOnDelete();
+            $table->foreignUuid('knowledge_chunk_id')->cascadeOnDelete()->constrained(
+                table: 'knowledge_chunks', indexName: 'id'
+            );
             $table->float('distance');
             $table->timestamps();
         });

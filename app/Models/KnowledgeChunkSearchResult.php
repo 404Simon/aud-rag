@@ -10,6 +10,6 @@ class KnowledgeChunkSearchResult extends Model
 
     public function knowledgeChunk()
     {
-        return $this->hasOne(KnowledgeChunk::class);
+        return $this->belongsTo(KnowledgeChunk::class);
     }
 }

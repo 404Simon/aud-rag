@@ -18,5 +18,5 @@ class KnowledgeChunk extends Model
 
     protected $fillable = ['title', 'description', 'tags', 'embedding', 'topic', 'content'];
 
-    protected $casts = ['embedding' => Vector::class];
+    protected $casts = ['tags' => 'array', 'embedding' => Vector::class];
 }
