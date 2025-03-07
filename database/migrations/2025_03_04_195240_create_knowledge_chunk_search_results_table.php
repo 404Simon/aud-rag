@@ -17,6 +17,7 @@ return new class extends Migration {
                 table: 'knowledge_chunks', indexName: 'id'
             );
             $table->float('distance');
+            $table->boolean('isRelevant');
             $table->timestamps();
         });
     }

@@ -11,7 +11,7 @@ use Exception;
 
 class RelevantTopicsService
 {
-    public function getRelevantTopics(string $input)
+    public static function getRelevantTopics(string $input)
     {
         $schema = new ObjectSchema(
             name: 'relevant_topics',

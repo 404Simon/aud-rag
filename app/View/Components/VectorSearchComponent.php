@@ -22,6 +22,8 @@ class VectorSearchComponent extends Component
         $this->message = $message;
         $this->searchResults = $message
             ->knowledgeChunkSearchResults()
+            ->orderBy('isRelevant', 'desc')
+            ->orderBy('distance', 'asc')
             ->with('knowledgeChunk')
             ->get();
     }

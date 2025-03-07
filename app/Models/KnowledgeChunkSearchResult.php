@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class KnowledgeChunkSearchResult extends Model
 {
-    protected $fillable = ['chat_message_id', 'knowledge_chunk_id', 'distance'];
+    protected $fillable = ['chat_message_id', 'knowledge_chunk_id', 'distance', 'isRelevant'];
 
     public function knowledgeChunk()
     {

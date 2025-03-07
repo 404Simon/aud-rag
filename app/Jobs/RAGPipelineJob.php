@@ -5,9 +5,9 @@ namespace App\Jobs;
 use App\Enums\ChatMessageType;
 use App\Models\Chat;
 use App\Models\KnowledgeChunk;
-use App\Models\KnowledgeChunkSearchResult;
 use App\Services\EmbeddingService;
 use App\Services\RelevantTopicsService;
+use App\Services\RerankingService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
@@ -32,9 +32,9 @@ class RAGPipelineJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(RelevantTopicsService $relevantTopicsService): void
+    public function handle(): void
     {
-        $relevantTopics = $relevantTopicsService->getRelevantTopics($this->userQuery);
+        $relevantTopics = RelevantTopicsService::getRelevantTopics($this->userQuery);
         $relevantTopicsMessage = $this->chat->messages()->create([
             'type' => ChatMessageType::RELEVANT_TOPICS,
         ]);
@@ -53,9 +53,15 @@ class RAGPipelineJob implements ShouldQueue
         ]);
 
         for ($i = 0; $i < count($relevantChunks); $i++) {
+            $chunk = $relevantChunks[$i];
+            $isRelevant = RerankingService::isRelevant($this->userQuery, $chunk);
+            if ($isRelevant === null) {
+                Log::error('isRelevant is null again');
+                continue;
+            }
             $vectorSearchMessage
                 ->knowledgeChunkSearchResults()
-                ->create(['knowledge_chunk_id' => $relevantChunks[$i]->id, 'distance' => $distances[$i]]);
+                ->create(['knowledge_chunk_id' => $relevantChunks[$i]->id, 'distance' => $distances[$i], 'isRelevant' => $isRelevant]);
         }
     }
 }
