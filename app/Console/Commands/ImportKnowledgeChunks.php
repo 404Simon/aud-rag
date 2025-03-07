@@ -69,7 +69,7 @@ class ImportKnowledgeChunks extends Command
             KnowledgeChunk::create([
                 'title' => $frontmatter['title'],
                 'description' => $frontmatter['description'],
-                'tags' => json_encode($frontmatter['tags']),
+                'tags' => $frontmatter['tags'],
                 'topic' => $topic,
                 'content' => $markdown,
                 'embedding' => $embedding,
