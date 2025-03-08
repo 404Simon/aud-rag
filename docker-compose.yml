@@ -15,6 +15,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+  sandbox:
+    build: ./sandbox
+    ports:
+      - "3456:3456"
 
 volumes:
   db_data:
