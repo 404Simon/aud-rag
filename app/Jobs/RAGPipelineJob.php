@@ -33,7 +33,7 @@ class RAGPipelineJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle(ChatService $chatService): void
     {
         $relevantTopics = RelevantTopicsService::getRelevantTopics($this->userQuery);
         $relevantTopicsMessage = $this->chat->messages()->create([
@@ -71,14 +71,10 @@ class RAGPipelineJob implements ShouldQueue
             }
         });
 
-        $chatAnswer = ChatService::generateAnswer($this->userQuery, $rerankedChunks);
-
         $chatAnswerMessage = $this->chat->messages()->create([
             'type' => ChatMessageType::CHAT_ANSWER,
         ]);
-        $chatAnswerMessage->chatAnswer()->create([
-            'message' => $chatAnswer->text,
-            'llm' => $chatAnswer->responseMeta->model,
-        ]);
+
+        $chatService->generateAnswer($this->userQuery, $rerankedChunks, $chatAnswerMessage);
     }
 }
