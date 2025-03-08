@@ -7,4 +7,5 @@ enum ChatMessageType: string
     case USER_QUERY = 'user_query';
     case VECTOR_SEARCH = 'vector_search';
     case RELEVANT_TOPICS = 'relevant_topics';
+    case CHAT_ANSWER = 'chat_answer';
 }

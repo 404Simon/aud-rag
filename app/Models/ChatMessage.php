@@ -24,6 +24,11 @@ class ChatMessage extends Model
         return $this->hasMany(KnowledgeChunkSearchResult::class);
     }
 
+    public function chatAnswer()
+    {
+        return $this->hasOne(ChatAnswer::class);
+    }
+
     protected $casts = [
         'type' => ChatMessageType::class,
     ];

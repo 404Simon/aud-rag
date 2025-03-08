@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Enums\ChatMessageType;
 use App\Models\Chat;
 use App\Models\KnowledgeChunk;
+use App\Services\ChatService;
 use App\Services\EmbeddingService;
 use App\Services\RelevantTopicsService;
 use App\Services\RerankingService;
@@ -46,22 +47,38 @@ class RAGPipelineJob implements ShouldQueue
             ->nearestNeighbors('embedding', $embeddedQuery, Distance::Cosine)
             ->take(5)
             ->get();
-        $distances = $relevantChunks->pluck('neighbor_distance');
 
         $vectorSearchMessage = $this->chat->messages()->create([
             'type' => ChatMessageType::VECTOR_SEARCH,
         ]);
+        $rerankedChunks = collect();
 
-        for ($i = 0; $i < count($relevantChunks); $i++) {
-            $chunk = $relevantChunks[$i];
+        $relevantChunks->each(function (KnowledgeChunk $chunk) use ($vectorSearchMessage, $rerankedChunks) {
             $isRelevant = RerankingService::isRelevant($this->userQuery, $chunk);
             if ($isRelevant === null) {
-                Log::error('isRelevant is null again');
-                continue;
+                Log::error('isRelevant is null for chunk ID: ' . $chunk->id);
+                return;
             }
-            $vectorSearchMessage
-                ->knowledgeChunkSearchResults()
-                ->create(['knowledge_chunk_id' => $relevantChunks[$i]->id, 'distance' => $distances[$i], 'isRelevant' => $isRelevant]);
-        }
+
+            $vectorSearchMessage->knowledgeChunkSearchResults()->create([
+                'knowledge_chunk_id' => $chunk->id,
+                'distance' => $chunk->neighbor_distance,
+                'isRelevant' => $isRelevant,
+            ]);
+
+            if ($isRelevant) {
+                $rerankedChunks->push($chunk);
+            }
+        });
+
+        $chatAnswer = ChatService::generateAnswer($this->userQuery, $rerankedChunks);
+
+        $chatAnswerMessage = $this->chat->messages()->create([
+            'type' => ChatMessageType::CHAT_ANSWER,
+        ]);
+        $chatAnswerMessage->chatAnswer()->create([
+            'message' => $chatAnswer->text,
+            'llm' => $chatAnswer->responseMeta->model,
+        ]);
     }
 }
