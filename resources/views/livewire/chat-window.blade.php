@@ -16,7 +16,7 @@
                 <x-vector-search-component :message="$message" />
             @endif
             @if ($message->type === ChatMessageType::CHAT_ANSWER)
-                <x-chat-answer-component :chatAnswer="$message->chatAnswer" />
+                <x-chat-answer-component :message="$message" />
             @endif
         @empty
             <div class="text-gray-500 dark:text-gray-400">

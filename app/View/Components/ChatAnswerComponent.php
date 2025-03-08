@@ -2,21 +2,21 @@
 
 namespace App\View\Components;
 
-use App\Models\ChatAnswer;
+use App\Models\ChatMessage;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use Closure;
 
 class ChatAnswerComponent extends Component
 {
-    public ChatAnswer $chatAnswer;
+    public ChatMessage $message;
 
     /**
      * Create a new component instance.
      */
-    public function __construct(ChatAnswer $chatAnswer)
+    public function __construct(ChatMessage $message)
     {
-        $this->chatAnswer = $chatAnswer;
+        $this->message = $message;
     }
 
     /**
