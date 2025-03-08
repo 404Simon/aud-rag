@@ -9,6 +9,11 @@ class ChatMessage extends Model
 {
     protected $fillable = ['chat_id', 'type'];
 
+    public function chat()
+    {
+        return $this->belongsTo(Chat::class);
+    }
+
     public function userQuery()
     {
         return $this->hasOne(UserQuery::class);

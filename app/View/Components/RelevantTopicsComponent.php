@@ -24,6 +24,14 @@ class RelevantTopicsComponent extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.relevant-topics-component');
+        $noRelevantTopicFound =
+            !$this->relevantTopics->elementare_datentypen &&
+            !$this->relevantTopics->algorithmenbewertung_und_laufzeit &&
+            !$this->relevantTopics->graphen_baeume &&
+            !$this->relevantTopics->sortierung &&
+            !$this->relevantTopics->suchen &&
+            !$this->relevantTopics->codierung &&
+            !$this->relevantTopics->kompression;
+        return view('components.relevant-topics-component', compact('noRelevantTopicFound'));
     }
 }

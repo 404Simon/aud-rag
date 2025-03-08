@@ -37,6 +37,11 @@
         Kompression
     </span>
     @endif
+    @if($noRelevantTopicFound)
+      <div class="text-gray-500 dark:text-gray-400">
+          Keine relevanten Themen gefunden...
+      </div>
+    @endif
     <div class="text-xs text-gray-500 dark:text-gray-400">
         {{ $relevantTopics->created_at->diffForHumans() }}
     </div>
