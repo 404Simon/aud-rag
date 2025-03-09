@@ -23,6 +23,9 @@
                 No messages yet. Start the conversation!
             </div>
         @endforelse
+        @if($isGenerating)
+            <x-spinner />
+        @endif
     </div>
     <!-- Input Area -->
     <div class="p-4 border-t border-gray-200 dark:border-gray-700">
