@@ -39,6 +39,11 @@ class ChatMessage extends Model
         return $this->hasMany(GraphImageToolCall::class);
     }
 
+    public function runCodeToolCalls()
+    {
+        return $this->hasMany(RunCodeToolCall::class);
+    }
+
     protected $casts = [
         'type' => ChatMessageType::class,
     ];

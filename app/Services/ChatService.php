@@ -26,11 +26,23 @@ class ChatService
         $runCodeTool = Tool::as('run_code')
             ->for('Execute provided code and return stdout, stderr, files and images.')
             ->withStringParameter('code', 'The code to execute')
-            ->using(function (string $code): string {
+            ->using(function (string $code) use ($chatAnswerMessage): string {
                 Log::info('Run Code Tool is being called');
                 $response = $this->sandboxService->runCode($code);
+                $stdout = $response['stdout'];
+                $stderr = $response['stderr'];
+                $files = $response['files'];
+                $images = $response['images'];
+                $chatAnswerMessage->runCodeToolCalls()->create([
+                    'code' => $code,
+                    'stdout' => $stdout,
+                    'stderr' => $stderr,
+                    'files' => $files,
+                    'images' => $images
+                ]);
+                ChatUpdated::dispatch($chatAnswerMessage->chat);
                 Log::info(json_encode($response));
-                return json_encode($response);
+                return 'stdout: ' . $stdout . '\nstderr: ' . $stderr . '\nfiles: ' . json_encode($files);
             });
 
         $graphTool = Tool::as('generate_graph_image')
