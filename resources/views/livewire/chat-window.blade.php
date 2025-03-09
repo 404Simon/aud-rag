@@ -2,7 +2,7 @@
     use App\Enums\ChatMessageType;
 @endphp
 
-<div wire:poll.1000ms class="flex flex-col h-full">
+<div class="flex flex-col h-full">
     <!-- Messages Area -->
     <div class="flex-1 overflow-y-auto p-4 space-y-2">
         @forelse ($this->chat->messages as $message)

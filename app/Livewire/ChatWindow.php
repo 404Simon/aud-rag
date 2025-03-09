@@ -3,8 +3,11 @@
 namespace App\Livewire;
 
 use App\Enums\ChatMessageType;
+use App\Events\ChatUpdated;
 use App\Jobs\RAGPipelineJob;
 use App\Models\Chat;
+use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class ChatWindow extends Component
@@ -15,6 +18,18 @@ class ChatWindow extends Component
     protected $rules = [
         'messageText' => 'required|string',
     ];
+
+    public function getListeners()
+    {
+        return [
+            "echo-private:chat.{$this->chat->id},ChatUpdated" => 'refreshChat',
+        ];
+    }
+
+    public function refreshChat()
+    {
+        $this->chat->refresh();
+    }
 
     public function sendMessage()
     {
@@ -33,6 +48,7 @@ class ChatWindow extends Component
 
         RAGPipelineJob::dispatch($this->chat, $this->messageText);
         $this->messageText = '';
+        $this->refreshChat();
     }
 
     public function isGenerating()

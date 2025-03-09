@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\ChatMessageType;
+use App\Events\ChatUpdated;
 use App\Models\Chat;
 use App\Models\KnowledgeChunk;
 use App\Services\ChatService;
@@ -40,6 +41,7 @@ class RAGPipelineJob implements ShouldQueue
             'type' => ChatMessageType::RELEVANT_TOPICS,
         ]);
         $relevantTopicsMessage->relevantTopics()->create($relevantTopics);
+        ChatUpdated::dispatch($this->chat);
 
         $embeddedQuery = EmbeddingService::createEmbedding($this->userQuery);
         $relevantChunks = KnowledgeChunk::query()
@@ -51,6 +53,7 @@ class RAGPipelineJob implements ShouldQueue
         $vectorSearchMessage = $this->chat->messages()->create([
             'type' => ChatMessageType::VECTOR_SEARCH,
         ]);
+        ChatUpdated::dispatch($this->chat);
         $rerankedChunks = collect();
 
         $relevantChunks->each(function (KnowledgeChunk $chunk) use ($vectorSearchMessage, $rerankedChunks) {
@@ -65,6 +68,7 @@ class RAGPipelineJob implements ShouldQueue
                 'distance' => $chunk->neighbor_distance,
                 'isRelevant' => $isRelevant,
             ]);
+            ChatUpdated::dispatch($this->chat);
 
             if ($isRelevant) {
                 $rerankedChunks->push($chunk);
@@ -74,6 +78,7 @@ class RAGPipelineJob implements ShouldQueue
         $chatAnswerMessage = $this->chat->messages()->create([
             'type' => ChatMessageType::CHAT_ANSWER,
         ]);
+        ChatUpdated::dispatch($this->chat);
 
         $chatService->generateAnswer($this->userQuery, $rerankedChunks, $chatAnswerMessage);
     }

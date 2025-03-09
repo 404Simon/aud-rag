@@ -2,12 +2,11 @@
 
 namespace App\Services;
 
+use App\Events\ChatUpdated;
 use App\Models\ChatMessage;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use EchoLabs\Prism\Enums\Provider;
 use EchoLabs\Prism\Facades\Tool;
 use EchoLabs\Prism\Schema\StringSchema;
-use EchoLabs\Prism\Text\Response;
 use EchoLabs\Prism\Prism;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
@@ -57,6 +56,7 @@ class ChatService
                     'isPlanar' => $isPlanar,
                     'image' => $response['image']
                 ]);
+                ChatUpdated::dispatch($chatAnswerMessage->chat);
                 return 'The given Graph is ' . ($isPlanar ? 'not ' : '') . 'planar and is being displayed to the user.';
             });
         try {
@@ -92,6 +92,7 @@ class ChatService
                 'message' => $response->text,
                 'llm' => $response->responseMeta->model,
             ]);
+            ChatUpdated::dispatch($chatAnswerMessage->chat);
         } catch (Exception $e) {
             Log::error('Failed to answer question: ' . $question . ', Error: ' . $e->getMessage());
             return;
