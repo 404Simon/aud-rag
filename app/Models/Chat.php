@@ -9,8 +9,6 @@ class Chat extends Model
 {
     use HasUuids;
 
-    public $incrementing = false;
-    protected $keyType = 'string';
     protected $fillable = ['title'];
 
     public function user()

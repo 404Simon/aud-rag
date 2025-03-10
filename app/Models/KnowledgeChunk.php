@@ -12,10 +12,6 @@ class KnowledgeChunk extends Model
     use HasUuids;
     use HasNeighbors;
 
-    public $incrementing = false;
-
-    protected $keyType = 'string';
-
     protected $fillable = ['title', 'description', 'tags', 'embedding', 'topic', 'content'];
 
     protected $casts = ['tags' => 'array', 'embedding' => Vector::class];
