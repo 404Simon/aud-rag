@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('user_queries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('chat_message_id')->cascadeOnDelete();
-            $table->string('message');
+            $table->longText('message');
             $table->timestamps();
         });
     }
