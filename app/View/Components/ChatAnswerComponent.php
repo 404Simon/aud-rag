@@ -24,6 +24,9 @@ class ChatAnswerComponent extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.chat-answer-component');
+        $toolCalls = $this->message->graphImageToolCalls;
+        $codeCalls = $this->message->runCodeToolCalls;
+        $calls = $toolCalls->merge($codeCalls)->sortBy('created_at');
+        return view('components.chat-answer-component', compact('calls'));
     }
 }
