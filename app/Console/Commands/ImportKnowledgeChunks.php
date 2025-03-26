@@ -59,6 +59,11 @@ class ImportKnowledgeChunks extends Command
                 continue;
             }
 
+            if (KnowledgeChunk::where('title', $frontmatter['title'])->exists()) {
+                $this->info('Skipping ' . $frontmatter['title'] . ' since it already exists!');
+                continue;
+            }
+
             $embedding = EmbeddingService::createEmbedding($markdown);
 
             if ($embedding == null) {
