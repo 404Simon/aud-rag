@@ -8,12 +8,15 @@ use App\Jobs\RAGPipelineJob;
 use App\Models\Chat;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class ChatWindow extends Component
 {
     public Chat $chat;
     public string $messageText = '';
+    public bool $showExportModal = false;
+    public string $markdownContent = '';
 
     protected $rules = [
         'messageText' => 'required|string',
@@ -59,8 +62,24 @@ class ChatWindow extends Component
         return false;
     }
 
+    public function openExportModal()
+    {
+        $this->markdownContent = $this->chat->toMarkdown();
+        $this->showExportModal = true;
+    }
+
+    public function closeExportModal()
+    {
+        $this->showExportModal = false;
+        $this->markdownContent = '';
+    }
+
     public function render()
     {
-        return view('livewire.chat-window', ['isGenerating' => $this->isGenerating()]);
+        return view('livewire.chat-window', [
+            'isGenerating' => $this->isGenerating(),
+            'showExportModal' => $this->showExportModal,
+            'markdownContent' => $this->markdownContent
+        ]);
     }
 }
