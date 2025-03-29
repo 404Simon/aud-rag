@@ -13,13 +13,13 @@ return new class extends Migration {
         Schema::create('relevant_topics', function (Blueprint $table) {
             $table->id();
             $table->foreignId('chat_message_id')->cascadeOnDelete();
-            $table->boolean('elementare_datentypen');
-            $table->boolean('algorithmenbewertung_und_laufzeit');
-            $table->boolean('graphen_baeume');
-            $table->boolean('sortierung');
-            $table->boolean('suchen');
-            $table->boolean('codierung');
-            $table->boolean('kompression');
+            $table->boolean('elementare_datentypen')->default(false);
+            $table->boolean('algorithmenbewertung_und_laufzeit')->default(false);
+            $table->boolean('graphen_baeume')->default(false);
+            $table->boolean('sortierung')->default(false);
+            $table->boolean('suchen')->default(false);
+            $table->boolean('codierung')->default(false);
+            $table->boolean('kompression')->default(false);
             $table->timestamps();
         });
     }
