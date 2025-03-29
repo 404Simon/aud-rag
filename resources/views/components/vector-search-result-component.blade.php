@@ -31,13 +31,13 @@
   </div>
 
   <!-- Modal -->
-  <div x-show="open" class="fixed inset-0 flex items-center justify-center z-50" style="display: none;">
-    <div class="fixed inset-0 bg-black opacity-50" @click="open = false"></div>
-    <div class="bg-white dark:bg-gray-800 rounded shadow-lg p-6 max-w-3xl w-full relative mx-4">
-      <button @click="open = false" class="absolute top-2 right-2 text-gray-600 dark:text-gray-300 text-2xl">&times;</button>
-      <div class="markdown-content">
-        {!! Str::markdown($result->knowledgeChunk->content) !!}
-      </div>
+    <div x-show="open" class="fixed inset-0 flex items-center justify-center z-50" style="display: none;">
+        <div class="fixed inset-0 bg-black opacity-50" @click="open = false"></div>
+        <div class="bg-white dark:bg-gray-800 rounded shadow-lg p-6 max-w-3xl w-full relative mx-4">
+            <button @click="open = false" class="absolute top-2 right-2 text-gray-600 dark:text-gray-300 text-2xl">&times;</button>
+            <div class="markdown-content overflow-y-auto" style="max-height: 70vh;">
+                {!! Str::markdown($result->knowledgeChunk->content) !!}
+            </div>
+        </div>
     </div>
-  </div>
 </div>
