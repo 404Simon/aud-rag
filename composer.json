@@ -73,7 +73,6 @@
             "@php artisan import:knowledge-chunks data/AuD_Slides/md/AuD_08_Sortieren_2 sortierung",
             "@php artisan import:knowledge-chunks data/AuD_Slides/md/AuD_09_Sortieren_3 sortierung",
             "@php artisan import:knowledge-chunks data/AuD_Slides/md/AuD_10_Suchen_1 suchen",
-            "@php artisan import:knowledge-chunks data/AuD_Slides/md/AuD_11_Suchen_2 suchen",
             "@php artisan import:knowledge-chunks data/AuD_Slides/md/AuD_12_Suchen_3 suchen",
             "@php artisan import:knowledge-chunks data/AuD_Slides/md/AuD_14_Codierung codierung",
             "@php artisan import:knowledge-chunks data/AuD_Slides/md/AuD_15_Kompression kompression"
