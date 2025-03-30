@@ -59,6 +59,11 @@ class ImportKnowledgeChunks extends Command
                 continue;
             }
 
+            if (array_key_exists('disabled', $frontmatter) && $frontmatter['disabled']) {
+                $this->info('Skipping ' . $frontmatter['title'] . ' since it is disabled!');
+                continue;
+            }
+
             if (KnowledgeChunk::where('title', $frontmatter['title'])->exists()) {
                 $this->info('Skipping ' . $frontmatter['title'] . ' since it already exists!');
                 continue;
