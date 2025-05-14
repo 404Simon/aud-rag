@@ -22,22 +22,25 @@ class ImportKnowledgeChunks extends Command
         $directory = $this->argument('directory');
         $topicInput = $this->argument('topic');
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             $this->error("Directory does not exist: {$directory}");
+
             return 1;
         }
 
         $topic = Topic::tryFrom($topicInput);
-        if (!$topic) {
-            $validTopics = implode(', ', array_map(fn($t) => $t->value, Topic::cases()));
+        if (! $topic) {
+            $validTopics = implode(', ', array_map(fn ($t) => $t->value, Topic::cases()));
             $this->error("Invalid topic: {$topicInput}. Valid topics are: {$validTopics}");
+
             return 1;
         }
 
-        $files = File::glob($directory . '/*.md');
+        $files = File::glob($directory.'/*.md');
 
         if (empty($files)) {
             $this->info("No markdown files found in {$directory}");
+
             return 0;
         }
 
@@ -51,28 +54,33 @@ class ImportKnowledgeChunks extends Command
                 try {
                     $frontmatter = Yaml::parse($yamlContent);
                 } catch (\Exception $e) {
-                    $this->error('Error parsing YAML in file: ' . basename($file));
+                    $this->error('Error parsing YAML in file: '.basename($file));
+
                     continue;
                 }
             } else {
-                $this->error('No YAML frontmatter found in file: ' . basename($file));
+                $this->error('No YAML frontmatter found in file: '.basename($file));
+
                 continue;
             }
 
             if (array_key_exists('disabled', $frontmatter) && $frontmatter['disabled']) {
-                $this->info('Skipping ' . $frontmatter['title'] . ' since it is disabled!');
+                $this->info('Skipping '.$frontmatter['title'].' since it is disabled!');
+
                 continue;
             }
 
             if (KnowledgeChunk::where('title', $frontmatter['title'])->exists()) {
-                $this->info('Skipping ' . $frontmatter['title'] . ' since it already exists!');
+                $this->info('Skipping '.$frontmatter['title'].' since it already exists!');
+
                 continue;
             }
 
             $embedding = EmbeddingService::createEmbedding($markdown);
 
             if ($embedding == null) {
-                $this->error('Could not generate an embedding for file: ' . basename($file));
+                $this->error('Could not generate an embedding for file: '.basename($file));
+
                 continue;
             }
 
@@ -85,8 +93,9 @@ class ImportKnowledgeChunks extends Command
                 'embedding' => $embedding,
             ]);
 
-            $this->info('Imported: ' . basename($file));
+            $this->info('Imported: '.basename($file));
         }
+
         return 0;
     }
 }

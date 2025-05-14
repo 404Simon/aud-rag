@@ -19,21 +19,8 @@ class RAGPipelineJob implements ShouldQueue
 {
     use Queueable;
 
-    protected Chat $chat;
-    protected string $userQuery;
+    public function __construct(protected Chat $chat, protected string $userQuery) {}
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(Chat $chat, string $userQuery)
-    {
-        $this->chat = $chat;
-        $this->userQuery = $userQuery;
-    }
-
-    /**
-     * Execute the job.
-     */
     public function handle(ChatService $chatService): void
     {
         $relevantTopics = RelevantTopicsService::getRelevantTopics($this->userQuery);
@@ -59,7 +46,8 @@ class RAGPipelineJob implements ShouldQueue
         $relevantChunks->each(function (KnowledgeChunk $chunk) use ($vectorSearchMessage, $rerankedChunks) {
             $isRelevant = RerankingService::isRelevant($this->userQuery, $chunk);
             if ($isRelevant === null) {
-                Log::error('isRelevant is null for chunk ID: ' . $chunk->id);
+                Log::error('isRelevant is null for chunk ID: '.$chunk->id);
+
                 return;
             }
 

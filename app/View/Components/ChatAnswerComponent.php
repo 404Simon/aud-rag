@@ -3,9 +3,9 @@
 namespace App\View\Components;
 
 use App\Models\ChatMessage;
+use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use Closure;
 
 class ChatAnswerComponent extends Component
 {
@@ -27,6 +27,7 @@ class ChatAnswerComponent extends Component
         $toolCalls = $this->message->graphImageToolCalls;
         $codeCalls = $this->message->runCodeToolCalls;
         $calls = $toolCalls->merge($codeCalls)->sortBy('created_at');
+
         return view('components.chat-answer-component', compact('calls'));
     }
 }

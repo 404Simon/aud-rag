@@ -9,8 +9,8 @@ use Pgvector\Laravel\Vector;
 
 class KnowledgeChunk extends Model
 {
-    use HasUuids;
     use HasNeighbors;
+    use HasUuids;
 
     protected $fillable = ['title', 'description', 'tags', 'embedding', 'topic', 'content'];
 

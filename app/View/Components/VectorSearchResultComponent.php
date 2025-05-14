@@ -3,9 +3,9 @@
 namespace App\View\Components;
 
 use App\Models\KnowledgeChunkSearchResult;
+use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use Closure;
 
 class VectorSearchResultComponent extends Component
 {

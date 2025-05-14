@@ -3,10 +3,10 @@
 namespace App\View\Components;
 
 use App\Models\ChatMessage;
+use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
-use Closure;
 
 class VectorSearchComponent extends Component
 {

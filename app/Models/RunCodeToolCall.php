@@ -11,7 +11,7 @@ class RunCodeToolCall extends Model
         'stdout',
         'stderr',
         'files',
-        'images'
+        'images',
     ];
 
     protected $casts = [

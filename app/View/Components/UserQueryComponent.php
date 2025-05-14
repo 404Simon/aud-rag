@@ -3,9 +3,9 @@
 namespace App\View\Components;
 
 use App\Models\UserQuery;
+use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use Closure;
 
 class UserQueryComponent extends Component
 {

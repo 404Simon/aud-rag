@@ -12,6 +12,7 @@ class ChatUpdated implements ShouldBroadcast
     use Dispatchable;
 
     public $broadcastQueue = 'broadcasts';
+
     public Chat $chat;
 
     /**
@@ -30,7 +31,7 @@ class ChatUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('chat.' . $this->chat->id),
+            new PrivateChannel('chat.'.$this->chat->id),
         ];
     }
 }

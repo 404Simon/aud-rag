@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\Models\KnowledgeChunk;
 use EchoLabs\Prism\Enums\Provider;
+use EchoLabs\Prism\Prism;
 use EchoLabs\Prism\Schema\BooleanSchema;
 use EchoLabs\Prism\Schema\ObjectSchema;
-use EchoLabs\Prism\Prism;
-use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class RerankingService
 {
@@ -26,13 +26,14 @@ class RerankingService
             $response = Prism::structured()
                 ->using(Provider::OpenAI, 'gpt-4o-mini')
                 ->withSchema($schema)
-                ->withPrompt('Question: ' . $question . ', Text: ' . $chunk->content)
+                ->withPrompt('Question: '.$question.', Text: '.$chunk->content)
                 ->generate()
                 ->structured;
 
             return $response['isRelevant'];
         } catch (Exception $e) {
-            Log::error('Failed to determine relevance for question: ' . $question . ' and chunk ' . $chunk->id . '. Error: ' . $e->getMessage());
+            Log::error('Failed to determine relevance for question: '.$question.' and chunk '.$chunk->id.'. Error: '.$e->getMessage());
+
             return null;
         }
     }

@@ -6,20 +6,14 @@ use App\Events\ChatUpdated;
 use App\Models\ChatMessage;
 use EchoLabs\Prism\Enums\Provider;
 use EchoLabs\Prism\Facades\Tool;
-use EchoLabs\Prism\Schema\StringSchema;
 use EchoLabs\Prism\Prism;
-use Illuminate\Support\Facades\Log;
+use EchoLabs\Prism\Schema\StringSchema;
 use Illuminate\Support\Collection;
-use Exception;
+use Illuminate\Support\Facades\Log;
 
 class ChatService
 {
-    private SandboxService $sandboxService;
-
-    public function __construct(SandboxService $sandboxService)
-    {
-        $this->sandboxService = $sandboxService;
-    }
+    public function __construct(private SandboxService $sandboxService) {}
 
     public function generateAnswer(string $question, Collection $chunks, ChatMessage $chatAnswerMessage): void
     {
@@ -38,11 +32,12 @@ class ChatService
                     'stdout' => $stdout,
                     'stderr' => $stderr,
                     'files' => $files,
-                    'images' => $images
+                    'images' => $images,
                 ]);
                 ChatUpdated::dispatch($chatAnswerMessage->chat);
                 Log::info(json_encode($response));
-                return 'stdout: ' . $stdout . '\nstderr: ' . $stderr . '\nfiles: ' . json_encode($files);
+
+                return 'stdout: '.$stdout.'\nstderr: '.$stderr.'\nfiles: '.json_encode($files);
             });
 
         $graphTool = Tool::as('generate_graph_image')
@@ -55,7 +50,7 @@ class ChatService
             ->withBooleanParameter('directed', 'Indicates if the graph is directed')
             ->using(function (array $edges, bool $directed) use ($chatAnswerMessage): string {
                 $decodedEdges = array_map(
-                    fn($edge) => json_decode($edge, true) ?: $edge,
+                    fn ($edge) => json_decode($edge, true) ?: $edge,
                     $edges
                 );
                 Log::info('Graph Image Tool is being called');
@@ -66,48 +61,27 @@ class ChatService
                     'isDirected' => $directed,
                     'edges' => $edges,
                     'isPlanar' => $isPlanar,
-                    'image' => $response['image']
+                    'image' => $response['image'],
                 ]);
                 ChatUpdated::dispatch($chatAnswerMessage->chat);
-                return 'The given Graph is ' . ($isPlanar ? 'not ' : '') . 'planar and is being displayed to the user.';
-            });
-        try {
-            $context = $chunks->pluck('content')->join('---\n\n');
-            $response = Prism::text()
-                ->using(Provider::OpenAI, 'gpt-4o-mini')
-                ->withMaxSteps(4)
-                ->withSystemPrompt('Du bist ein hilfreicher Informatikexperte. Erkläre Sachverhalte faktenbasiert und nutze verfügbare Funktionen nur, wenn sie wirklich nötig sind.\n Nutze diese zusätzlichen Informationen beim beantworten der Frage: ' . $context)
-                ->withPrompt('Frage: ' . $question)
-                ->withTools([$runCodeTool, $graphTool])
-                ->generate();
-            Log::info('Complete Response Object:');
-            Log::info(json_encode($response));
-            Log::info('Response Text:');
-            Log::info(json_encode($response->text));
-            Log::info('Response Steps:');
-            Log::info(json_encode($response->steps));
-            Log::info('Response Messages:');
-            Log::info(json_encode($response->messages));
-            Log::info('Response Tool Calls:');
-            Log::info(json_encode($response->toolCalls));
-            Log::info('Response Tool Results:');
-            Log::info(json_encode($response->toolResults));
-            Log::info('Response Finish Reason:');
-            Log::info(json_encode($response->finishReason));
-            Log::info('Response Meta:');
-            Log::info(json_encode($response->responseMeta));
-            Log::info('Response Response Messages:');
-            Log::info(json_encode($response->responseMessages));
 
-            // final answer
-            $chatAnswerMessage->chatAnswer()->create([
-                'message' => $response->text,
-                'llm' => $response->responseMeta->model,
-            ]);
-            ChatUpdated::dispatch($chatAnswerMessage->chat);
-        } catch (Exception $e) {
-            Log::error('Failed to answer question: ' . $question . ', Error: ' . $e->getMessage());
-            return;
-        }
+                return 'The given Graph is '.($isPlanar ? '' : 'not ').'planar and is being displayed to the user.';
+            });
+        $context = $chunks->pluck('content')->join('---\n\n');
+        $response = Prism::text()
+            ->using(Provider::OpenAI, 'gpt-4o')
+            ->withMaxSteps(4)
+            ->withSystemPrompt('Du bist ein hilfreicher Informatikexperte. Erkläre Sachverhalte faktenbasiert und nutze verfügbare Funktionen, wenn sie sinnvoll sind.\n Schreibe Code, um Aufgaben zu lösen!\n Nutze diese zusätzlichen Informationen beim beantworten der Frage: '.$context)
+            ->withPrompt('Frage: '.$question)
+            ->withTools([$runCodeTool, $graphTool])
+            ->withClientOptions(['timeout' => 90])
+            ->generate();
+
+        // final answer
+        $chatAnswerMessage->chatAnswer()->create([
+            'message' => $response->text,
+            'llm' => $response->responseMeta->model,
+        ]);
+        ChatUpdated::dispatch($chatAnswerMessage->chat);
     }
 }

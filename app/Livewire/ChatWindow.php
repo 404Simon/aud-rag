@@ -3,19 +3,18 @@
 namespace App\Livewire;
 
 use App\Enums\ChatMessageType;
-use App\Events\ChatUpdated;
 use App\Jobs\RAGPipelineJob;
 use App\Models\Chat;
-use Illuminate\Support\Facades\Broadcast;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Livewire\Component;
 
 class ChatWindow extends Component
 {
     public Chat $chat;
+
     public string $messageText = '';
+
     public bool $showExportModal = false;
+
     public string $markdownContent = '';
 
     protected $rules = [
@@ -59,6 +58,7 @@ class ChatWindow extends Component
         if ($this->chat->messages->isNotEmpty()) {
             return $this->chat->messages->last()->type !== ChatMessageType::CHAT_ANSWER;
         }
+
         return false;
     }
 
@@ -79,7 +79,7 @@ class ChatWindow extends Component
         return view('livewire.chat-window', [
             'isGenerating' => $this->isGenerating(),
             'showExportModal' => $this->showExportModal,
-            'markdownContent' => $this->markdownContent
+            'markdownContent' => $this->markdownContent,
         ]);
     }
 }

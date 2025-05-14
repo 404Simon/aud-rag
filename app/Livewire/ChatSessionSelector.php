@@ -9,12 +9,14 @@ use Livewire\Component;
 class ChatSessionSelector extends Component
 {
     public ?Chat $selectedChat;
+
     public $editingChatId = null;
+
     public $editingChatTitle = '';
 
     public function createChat()
     {
-        $this->selectedChat = Auth::user()->chats()->create(['title' => 'Chat Session ' . now()->format('H:i:s')]);
+        $this->selectedChat = Auth::user()->chats()->create(['title' => 'Chat Session '.now()->format('H:i:s')]);
     }
 
     public function selectChat($chatId)

@@ -17,4 +17,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat', ChatSessionSelector::class)->name('chat');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

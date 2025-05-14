@@ -3,11 +3,11 @@
 namespace App\Services;
 
 use EchoLabs\Prism\Enums\Provider;
+use EchoLabs\Prism\Prism;
 use EchoLabs\Prism\Schema\BooleanSchema;
 use EchoLabs\Prism\Schema\ObjectSchema;
-use EchoLabs\Prism\Prism;
-use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class RelevantTopicsService
 {
@@ -23,7 +23,7 @@ class RelevantTopicsService
                 new BooleanSchema('sortierung', 'Diese Lektion befasst sich mit **Sortieralgorithmen**, die in verschiedene Kategorien eingeteilt werden, darunter einfache, schnelle, spezielle und externe Verfahren. Sie beschreiben die **Funktionsweise verschiedener Algorithmen wie Bubble Sort, Selection Sort, Insertion Sort, Shell Sort, Heap Sort, Quick Sort, Merge Sort und Counting Sort**, analysieren ihre Laufzeitkomplexität und vergleichen ihre Effizienz in unterschiedlichen Szenarien.', false),
                 new BooleanSchema('suchen', 'Suchalgorithmen in Feldern und Bäumen** mit Fokus auf binäre Suchbäume und AVL-Bäume. Sie lernen verschiedene Suchmethoden, darunter lineare und binäre Suche sowie Interpolationssuche, und beschreiben **die Funktionsweise, Komplexität und Vor- und Nachteile** der jeweiligen Verfahren. Weiterhin werden **B-Bäume als plattenbasierte Suchstruktur** vorgestellt und die Unterschiede zu B*-Bäumen, die eine effizientere Speicherung und Organisation großer Datenmengen ermöglichen, erläutert. Im zweiten Teil wird außerdem **Hashing als Verfahren zur schnellen Suche** vorgestellt.', false),
                 new BooleanSchema('codierung', 'Die Codierung bietet eine umfassende Einführung in das Thema Codierung in der Informatik und behandelt verschiedene Aspekte wie **grundlegende Definitionen, Code-Erzeugung, Code-Sicherung, lineare Codes und nicht-binäre Codes**. Es werden **etablierte Codierungsverfahren** wie BCD, ASCII und Unicode vorgestellt sowie **Methoden zur Fehlererkennung und -korrektur** wie Paritätscodes, Kreuzparität und Hamming-Distanz erläutert. Das Dokument beinhaltet zudem **zahlreiche Beispiele und Übungsaufgaben** zur Vertiefung des Verständnisses.', false),
-                new BooleanSchema('kompression', 'Die Lektion Datenkompression stellt verschiedene Kompressionsverfahren vor, darunter die arithmetische Codierung, Lauflängencodierung, Differenzcodierung und den LZW-Algorithmus. Es werden **sowohl verlustfreie als auch verlustbehaftete Kompressionsmethoden** erklärt und anhand von Beispielen illustriert.', false)
+                new BooleanSchema('kompression', 'Die Lektion Datenkompression stellt verschiedene Kompressionsverfahren vor, darunter die arithmetische Codierung, Lauflängencodierung, Differenzcodierung und den LZW-Algorithmus. Es werden **sowohl verlustfreie als auch verlustbehaftete Kompressionsmethoden** erklärt und anhand von Beispielen illustriert.', false),
             ],
         );
 
@@ -31,11 +31,13 @@ class RelevantTopicsService
             $response = Prism::structured()
                 ->using(Provider::OpenAI, 'gpt-4o-mini')
                 ->withSchema($schema)
-                ->withPrompt('Du bist Informatikexperte. Analysiere die gegebene Frage und bestimme alle relevanten Teilgebiete der Informatik.\nFrage: ' . $input)
+                ->withPrompt('Du bist Informatikexperte. Analysiere die gegebene Frage und bestimme alle relevanten Teilgebiete der Informatik.\nFrage: '.$input)
                 ->generate();
+
             return $response->structured;
         } catch (Exception $e) {
-            Log::error('Failed to generate embedding for input: ' . $input . '. Error: ' . $e->getMessage());
+            Log::error('Failed to generate embedding for input: '.$input.'. Error: '.$e->getMessage());
+
             return null;
         }
     }

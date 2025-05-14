@@ -10,7 +10,7 @@ class GraphImageToolCall extends Model
         'isDirected',
         'edges',
         'isPlanar',
-        'image'
+        'image',
     ];
 
     protected $casts = [

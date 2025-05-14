@@ -51,20 +51,20 @@ class Chat extends Model
                         foreach ($calls as $call) {
                             if ($call instanceof \App\Models\GraphImageToolCall) {
                                 $markdown .= "- **Graph Image Tool Call:**\n";
-                                $markdown .= '  - Is Directed: ' . ($call->isDirected ? 'Yes' : 'No') . "\n";
+                                $markdown .= '  - Is Directed: '.($call->isDirected ? 'Yes' : 'No')."\n";
                                 $edges = is_array($call->edges) ? implode(', ', $call->edges) : $call->edges;
-                                $markdown .= '  - Edges: ' . $edges . "\n";
-                                $markdown .= '  - Is Planar: ' . ($call->isPlanar ? 'Yes' : 'No') . "\n";
-                                $markdown .= '  - Image: ' . $call->image . "\n";
+                                $markdown .= '  - Edges: '.$edges."\n";
+                                $markdown .= '  - Is Planar: '.($call->isPlanar ? 'Yes' : 'No')."\n";
+                                $markdown .= '  - Image: '.$call->image."\n";
                             } elseif ($call instanceof \App\Models\RunCodeToolCall) {
                                 $markdown .= "- **Run Code Tool Call:**\n";
-                                $markdown .= "  - Code:\n```\n" . $call->code . "\n```\n";
-                                $markdown .= '  - Stdout: ' . $call->stdout . "\n";
-                                $markdown .= '  - Stderr: ' . $call->stderr . "\n";
+                                $markdown .= "  - Code:\n```\n".$call->code."\n```\n";
+                                $markdown .= '  - Stdout: '.$call->stdout."\n";
+                                $markdown .= '  - Stderr: '.$call->stderr."\n";
                                 $files = is_array($call->files) ? implode(', ', $call->files) : $call->files;
-                                $markdown .= '  - Files: ' . $files . "\n";
+                                $markdown .= '  - Files: '.$files."\n";
                                 $images = is_array($call->images) ? implode(', ', $call->images) : $call->images;
-                                $markdown .= '  - Images: ' . $images . "\n";
+                                $markdown .= '  - Images: '.$images."\n";
                             }
                             $markdown .= "\n";
                         }
@@ -76,13 +76,13 @@ class Chat extends Model
                     $identifiedTopics = [];
 
                     foreach ($allAttributes as $key => $value) {
-                        if (($value === true || $value === 1) && !in_array($key, ['id', 'chat_message_id', 'created_at', 'updated_at'])) {
+                        if (($value === true || $value === 1) && ! in_array($key, ['id', 'chat_message_id', 'created_at', 'updated_at'])) {
                             $identifiedTopics[] = $key;
                         }
                     }
 
-                    if (!empty($identifiedTopics)) {
-                        $markdown .= '**System:** Identified relevant topics: ' . implode(', ', $identifiedTopics) . ".\n\n";
+                    if (! empty($identifiedTopics)) {
+                        $markdown .= '**System:** Identified relevant topics: '.implode(', ', $identifiedTopics).".\n\n";
                     }
                     break;
                 case ChatMessageType::VECTOR_SEARCH:
@@ -92,14 +92,14 @@ class Chat extends Model
                             $knowledgeChunk = $result->knowledgeChunk;
                             $relevance = $result->isRelevant ? 'Yes' : 'No';
 
-                            $markdown .= '- **Knowledge Chunk:** ' . $knowledgeChunk->title . "\n";
-                            $markdown .= '  - Description: ' . $knowledgeChunk->description . "\n";
+                            $markdown .= '- **Knowledge Chunk:** '.$knowledgeChunk->title."\n";
+                            $markdown .= '  - Description: '.$knowledgeChunk->description."\n";
                             $tags = implode(', ', $knowledgeChunk->tags);
-                            $markdown .= '  - Tags: ' . $tags . "\n";
-                            $markdown .= '  - Topic: ' . $knowledgeChunk->topic . "\n";
-                            $markdown .= '  - Distance: ' . number_format($result->distance, 2) . "\n";
-                            $markdown .= '  - Relevant: ' . $relevance . "\n\n";
-                            $markdown .= $knowledgeChunk->content . "\n";
+                            $markdown .= '  - Tags: '.$tags."\n";
+                            $markdown .= '  - Topic: '.$knowledgeChunk->topic."\n";
+                            $markdown .= '  - Distance: '.number_format($result->distance, 2)."\n";
+                            $markdown .= '  - Relevant: '.$relevance."\n\n";
+                            $markdown .= $knowledgeChunk->content."\n";
                         }
                     } else {
                         $markdown .= "*No vector search results available.*\n\n";
