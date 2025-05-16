@@ -8,7 +8,7 @@
       @foreach($calls as $call)
         @if($call instanceof App\Models\GraphImageToolCall)
         <div x-data="{ selectedTab: 'output' }" class="flex flex-col h-full mb-4">
-          <div class="relative flex flex-col flex-1 p-4 border border-gray-200 dark:border-gray-700 rounded-lg shadow cursor-default transition transform hover:shadow-lg hover:-translate-y-1 duration-300 min-h-[420px] bg-white dark:bg-gray-800">
+          <div class="w-1/2 relative flex flex-col flex-1 p-4 border border-gray-200 dark:border-gray-700 rounded-lg shadow cursor-default transition transform hover:shadow-lg hover:-translate-y-1 duration-300 min-h-[420px] bg-white dark:bg-gray-800">
             <h2 class="text-xl font-semibold cursor-pointer transition-colors duration-300 pr-20 text-gray-900 dark:text-gray-100">
               Image Tool Call
             </h2>
@@ -34,7 +34,7 @@
               </div>
               <div class="px-2 py-4 text-gray-700 dark:text-gray-300">
                 <div x-cloak x-show="selectedTab === 'output'" id="tabpaneloutput" role="tabpanel">
-                  <img src="{{ $call->image }}" alt="Graph Image" class="w-full h-auto">
+                  <img src="{{ $call->image }}" alt="Graph Image" class="h-auto">
                   <p class="mt-2"><strong>planar:</strong> {{ $call->isPlanar ? 'Ja' : 'Nein' }}</p>
                 </div>
                 <div x-cloak x-show="selectedTab === 'input'" id="tabpanelinput" role="tabpanel">
