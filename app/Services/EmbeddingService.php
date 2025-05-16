@@ -2,11 +2,11 @@
 
 namespace App\Services;
 
-use EchoLabs\Prism\Enums\Provider;
-use EchoLabs\Prism\Prism;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Prism;
 
 class EmbeddingService
 {
@@ -24,6 +24,7 @@ class EmbeddingService
     {
         try {
             $content = Storage::disk('local')->get(self::getStoragePath($key));
+            Log::info('Retrieved embedding from cache.');
 
             return json_decode($content, true);
         } catch (Exception $e) {
@@ -59,9 +60,9 @@ class EmbeddingService
             $response = Prism::embeddings()
                 ->using(Provider::OpenAI, 'text-embedding-3-small')
                 ->fromInput($input)
-                ->generate();
+                ->asEmbeddings();
 
-            $embedding = $response->embeddings;
+            $embedding = $response->embeddings[0]->embedding;
 
             if ($embedding && self::saveEmbedding($key, $embedding)) {
                 Log::info('Generated and saved embedding for input: '.$input);

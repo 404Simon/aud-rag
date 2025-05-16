@@ -10,14 +10,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "echolabsdev/prism": "^0.42.0",
         "laravel/framework": "^12.0",
         "laravel/reverb": "^1.4",
         "laravel/tinker": "^2.10.1",
         "livewire/flux": "^2.0",
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
-        "pgvector/pgvector": "^0.2.2"
+        "pgvector/pgvector": "^0.2.2",
+        "prism-php/prism": "^0.67.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",

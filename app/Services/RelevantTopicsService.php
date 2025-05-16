@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use EchoLabs\Prism\Enums\Provider;
-use EchoLabs\Prism\Prism;
-use EchoLabs\Prism\Schema\BooleanSchema;
-use EchoLabs\Prism\Schema\ObjectSchema;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Prism;
+use Prism\Prism\Schema\BooleanSchema;
+use Prism\Prism\Schema\ObjectSchema;
 
 class RelevantTopicsService
 {
@@ -32,7 +32,7 @@ class RelevantTopicsService
                 ->using(Provider::OpenAI, 'gpt-4o-mini')
                 ->withSchema($schema)
                 ->withPrompt('Du bist Informatikexperte. Analysiere die gegebene Frage und bestimme alle relevanten Teilgebiete der Informatik.\nFrage: '.$input)
-                ->generate();
+                ->asStructured();
 
             return $response->structured;
         } catch (Exception $e) {

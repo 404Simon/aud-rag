@@ -4,12 +4,12 @@ namespace App\Services;
 
 use App\Events\ChatUpdated;
 use App\Models\ChatMessage;
-use EchoLabs\Prism\Enums\Provider;
-use EchoLabs\Prism\Facades\Tool;
-use EchoLabs\Prism\Prism;
-use EchoLabs\Prism\Schema\StringSchema;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Facades\Tool;
+use Prism\Prism\Prism;
+use Prism\Prism\Schema\StringSchema;
 
 class ChatService
 {
@@ -75,12 +75,12 @@ class ChatService
             ->withPrompt('Frage: '.$question)
             ->withTools([$runCodeTool, $graphTool])
             ->withClientOptions(['timeout' => 90])
-            ->generate();
+            ->asText();
 
         // final answer
         $chatAnswerMessage->chatAnswer()->create([
             'message' => $response->text,
-            'llm' => $response->responseMeta->model,
+            'llm' => $response->meta->model,
         ]);
         ChatUpdated::dispatch($chatAnswerMessage->chat);
     }

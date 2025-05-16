@@ -3,12 +3,12 @@
 namespace App\Services;
 
 use App\Models\KnowledgeChunk;
-use EchoLabs\Prism\Enums\Provider;
-use EchoLabs\Prism\Prism;
-use EchoLabs\Prism\Schema\BooleanSchema;
-use EchoLabs\Prism\Schema\ObjectSchema;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Prism;
+use Prism\Prism\Schema\BooleanSchema;
+use Prism\Prism\Schema\ObjectSchema;
 
 class RerankingService
 {
@@ -27,7 +27,7 @@ class RerankingService
                 ->using(Provider::OpenAI, 'gpt-4o-mini')
                 ->withSchema($schema)
                 ->withPrompt('Question: '.$question.', Text: '.$chunk->content)
-                ->generate()
+                ->asStructured()
                 ->structured;
 
             return $response['isRelevant'];
