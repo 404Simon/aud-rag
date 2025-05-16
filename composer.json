@@ -76,6 +76,16 @@
             "@php artisan import:knowledge-chunks data/AuD_Slides/md/AuD_12_Suchen_3 suchen",
             "@php artisan import:knowledge-chunks data/AuD_Slides/md/AuD_14_Codierung codierung",
             "@php artisan import:knowledge-chunks data/AuD_Slides/md/AuD_15_Kompression kompression"
+        ],
+        "setup": [
+            "composer install",
+            "npm install",
+            "npm run build",
+            "cp .env.example .env",
+            "@php artisan key:generate",
+            "@php artisan storage:link",
+            "docker compose up --wait",
+            "@php artisan migrate --seed --force"
         ]
     },
     "extra": {
