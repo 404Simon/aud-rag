@@ -17,6 +17,10 @@ Ein spezialisierter Chatbot für die Vorlesung "Algorithmen und Datenstrukturen"
       ```bash
       composer setup
       ```
+    - Um die KnowledgeChunks zu importieren wurde ein composer-Script angelegt, welches ausgeführt werden muss.
+      ```bash
+      composer import
+      ```
     - Für die KI-Features wird ein OpenAI-API-Schlüssel benötigt, welcher im `.env`-File hinterlegt werden muss.
       ```
       OPENAI_API_KEY=sk-...
