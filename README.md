@@ -5,7 +5,6 @@ Ein spezialisierter Chatbot für die Vorlesung "Algorithmen und Datenstrukturen"
 ## Installation
 
 - Umgebung
-    - Die Chunk-Daten liegen im Submodule "data" und müssen mittels `git submodule update --init --recursive` geladen werden.
     - Für die Laravel Applikation werden PHP, Composer (siehe [Laravel Docs](https://laravel.com/docs/12.x/installation#installing-php)) und npm (siehe [Node Docs](https://nodejs.org/en/download)) benötigt.
     - Für die Python-Sandbox und den PostgreSQL-Container werden eine Containerruntime wie [Docker](https://docs.docker.com/get-started/get-docker/) oder [Podman](https://podman.io/docs/installation) sowie ein Compose-Tool wie [Docker Compose](https://docs.docker.com/compose/install/) oder [Podman Compose](https://podman-desktop.io/docs/compose/setting-up-compose) benötigt.
 - Installation & Starten
